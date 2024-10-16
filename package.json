@@ -1,0 +1,29 @@
+{
+  "name": "nightride-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:dev": "jest --watchAll",
+    "start:dev": "nodemon src/index.js",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "await-to-js": "^3.0.0",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.7.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7"
+  }
+}

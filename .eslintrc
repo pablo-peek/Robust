@@ -1,0 +1,28 @@
+{
+    "extends": ["prettier"],
+    "plugins": ["prettier"],
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "printWidth": 100,
+          "trailingComma": "none",
+          "tabWidth": 2,
+          "semi": true,
+          "singleQuote": true,
+          "bracketSpacing": true,
+          "arrowParens": "always",
+          "endOfLine": "auto",
+          "proseWrap": "preserve",
+          "quoteProps": "as-needed",
+          "useTabs": false
+        }
+      ]
+    },
+    "parserOptions": {
+      "ecmaVersion": "latest"
+    },
+    "env": {
+      "es6": true
+    }
+  }
