@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const router = require('./routes/index.js');
+const User = require('./models/users');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 
 const app = express();
@@ -14,6 +16,24 @@ app.use(express.urlencoded({ extended: false }));
  */
 app.get('/health', (req, res) => {
   return res.sendStatus(200);
+});
+
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error('No user found');
+  }
+  const validPassword = await user.validatePassword(password);
+  if (!validPassword) {
+    throw new Error('Invalid password');
+  }
+  const token = jwt.sign({ id: user._id }, 'MySecretDomentos', {
+    expiresIn: 60 * 60 * 2
+  });
+
+  return res.json({ auth: true, token, username: user.username });
+
 });
 
 app.get('/', (req, res) => {

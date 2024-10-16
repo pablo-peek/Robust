@@ -9,7 +9,6 @@ const connectDB = async () => {
     if (isConnected) {
         return;
     }
-
     try {
         await mongoose.connect(process.env.ROBUST_MONGODB_URI);
         isConnected = true;
