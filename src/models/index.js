@@ -1,7 +1,5 @@
-
 const mongoose = require('mongoose');
 require('dotenv').config();
-
 
 let isConnected = false;
 
@@ -10,7 +8,7 @@ const connectDB = async () => {
         return;
     }
     try {
-        await mongoose.connect(process.env.ROBUST_MONGODB_URI);
+        await mongoose.connect(process.env.ROBUST_MONGODB_URI, { connectTimeoutMS: 5000 });
         isConnected = true;
         console.log('Database connected');
     } catch (error) {
