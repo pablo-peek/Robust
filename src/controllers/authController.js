@@ -1,7 +1,7 @@
 const { to } = require('await-to-js');
 const CustomError = require('../utils/customError.js');
 const AuthService = require('../services/authService.js');
-const validateRegisterData = require('../utils/validateSchemaJoi.js');
+const {validateLoginData, validateRegisterData} = require('../utils/validateSchemaJoi.js');
 
 class AuthController {
   constructor() {
@@ -11,6 +11,13 @@ class AuthController {
     const { body } = httpRequest;
     const { email, password } = body;
 
+    const { error } = validateLoginData(body);
+
+    if (error) {
+        throw new CustomError({
+          message: error.details[0].message
+        });
+      }
     const [err, result] = await to(this.authService.login(email, password));
 
     if (err) {
@@ -42,8 +49,7 @@ class AuthController {
 
     if (error) {
       throw new CustomError({
-        message: error.details[0].message,
-        status: 400
+        message: error.details[0].message
       });
     }
 
