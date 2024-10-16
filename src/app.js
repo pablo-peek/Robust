@@ -4,12 +4,7 @@ const router = require('./routes/index.js');
 const cors = require('cors');
 
 const app = express();
-const corsConfig = {
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}
-app.use(cors(corsConfig));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
