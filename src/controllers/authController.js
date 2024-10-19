@@ -10,6 +10,7 @@ class AuthController {
   login = async (httpRequest) => {
     const { body } = httpRequest;
     const { email, password } = body;
+    console.log(httpRequest);
 
     const { error } = validateLoginData(body);
 
