@@ -15,8 +15,8 @@ class AuthService {
       if (!validPassword) {
         throw new Error('Invalid password');
       }
-      const token = jwt.sign({ id: user._id }, 'MySecretDomentos', {
-        expiresIn: 60 * 60 * 2
+       const token = jwt.sign({ id: user._id }, process.env.KEY_SECRET, {
+        expiresIn: 60 * 60 * 24 * 365 * 3
       });
 
       return { auth: true, token, username: user.username };
