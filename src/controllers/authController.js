@@ -22,15 +22,13 @@ class AuthController {
 
     if (err) {
       throw new CustomError({
-        message: err.message,
-        status: 400
+        message: err.message
       });
     }
 
     if(!result) {
         throw new CustomError({
-            message: 'User not found',
-            status: 400
+            message: 'User not found'
         });
     }
 
@@ -57,8 +55,7 @@ class AuthController {
 
     if (err) {
       throw new CustomError({
-        message: err.message,
-        status: err.status
+        message: err.message
       });
     }
 
