@@ -16,6 +16,16 @@ const userSchema = new Schema({
         type: String,
         require: true,
     },
+    races: [{
+        raceNumber: {
+            type: Number,
+            require: true
+        },
+        bestTime: {
+            type: Number,
+            require: true
+        }
+    }],
     created_at: {
         type: Date,
         require: true,
