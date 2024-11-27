@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
+const { formatTime } = require('../utils/formatTime');
 require('dotenv').config();
 
 class UserService {
@@ -46,7 +47,11 @@ class UserService {
     
             const usersWithCurrentUserFlag = users.map(user => ({
                 ...user,
-                isCurrentUser: user._id.toString() === userId
+                isCurrentUser: user._id.toString() === userId,
+                races: user.races.map(({ _id, ...race }) => ({
+                    ...race,
+                    formattedBestTime: formatTime(race.bestTime)
+                }))
             }));
     
             return usersWithCurrentUserFlag;
