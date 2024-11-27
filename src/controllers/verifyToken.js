@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 function verifyToken (req, res, next) {
     const token = req.headers["authorization"];
@@ -8,17 +9,22 @@ function verifyToken (req, res, next) {
             message: "No token provided"
         });
     }
-    const bearer = token.split(" ");
-    const tokenBearer = bearer[1];
-    if(tokenBearer === 'undefined'){
+    try {
+        const decoded = jwt.verify(token, process.env.KEY_SECRET);
+        req.userId = decoded.id;
+        return res.status(200).json({
+            auth: true,
+            message: "Token is valid",
+            user: decoded.id,
+            token: token
+        });
+
+    } catch (error) {
         return res.status(401).json({
-            auth:false,
-            message: "No token provided"
+            auth: false,
+            message: "Failed to authenticate token"
         });
     }
-    const decoded = jwt.verify(tokenBearer, process.env.KEY_SECRET);
-        req.userId = decoded.id;
-        next();
-    }
+}
 
 module.exports = verifyToken;

@@ -15,7 +15,7 @@ function controllerHandler(controllerAction) {
 
         if(err) return next(err);
 
-        return res.status(result.status || 200).send(result);
+        return res.status(result?.status || 200).send(result);
     }
 }
 

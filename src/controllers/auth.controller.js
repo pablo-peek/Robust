@@ -1,6 +1,6 @@
 const { to } = require('await-to-js');
 const CustomError = require('../utils/customError.js');
-const AuthService = require('../services/authService.js');
+const AuthService = require('../services/auth.service.js');
 const {validateLoginData, validateRegisterData} = require('../utils/validateSchemaJoi.js');
 
 class AuthController {
@@ -64,6 +64,9 @@ class AuthController {
         message: 'User created successfully',
         data: result
     };
+  };
+  currentUser = async (httpRequest) => {
+    const {authorization} = httpRequest.headers;
   };
 }
 

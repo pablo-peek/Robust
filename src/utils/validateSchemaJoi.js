@@ -27,4 +27,16 @@ function validateLoginData(data) {
     return schema.validate(data);
   }
 
-module.exports = { validateRegisterData, validateLoginData };
+
+  function validatePutFastLapInRace(data) {
+    const schema = Joi.object({
+      raceId: Joi.number().required(),
+      lapTime: Joi.number()
+      .min(0)
+      .required()
+    });
+
+    return schema.validate(data);
+  }
+
+module.exports = { validateRegisterData, validateLoginData, validatePutFastLapInRace };
