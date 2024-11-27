@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users');
-const { formatTime } = require('../utils/formatTime');
+const formatTime = require('../utils/formatTime');
 require('dotenv').config();
 
 class UserService {
