@@ -30,7 +30,7 @@ class UserService {
     }
   }
 
-    async getAllUsers(userId, page = 1, limit = 10) {
+    async getAllUsers(userId, page, limit) {
         try {
             const users = await User.aggregate([
                 { $match: { races: { $exists: true, $not: { $size: 0 } } } },

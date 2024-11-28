@@ -65,6 +65,7 @@ class UserController {
 
     getAllUsers = async (httpRequest) => {
         const { authorization } = httpRequest.headers;
+        let { page, limit } = httpRequest.query;
 
         let userId;
 
@@ -84,7 +85,10 @@ class UserController {
             }
         }
 
-        const [err, result] = await to(this.userService.getAllUsers(userId));
+        page = parseInt(page, 10);
+        limit = parseInt(limit, 10);
+
+        const [err, result] = await to(this.userService.getAllUsers(userId, page, limit));
 
         if (err) {
             throw new CustomError({
