@@ -6,60 +6,37 @@ require('dotenv').config();
 class UserService {
   constructor() {}
 
-  async putFastLapInRace(userId, raceNumber, lapTime) {
-    try {
-      const user = await User.findById(userId);
-      console.log(user);
-      if (!user) {
-        throw new Error("User not found");
-      }
+  async getAllUsers(userId, raceNumber, page, limit) {
+      try {
+          const users = await User.aggregate([
+              { $match: { races: { $exists: true, $not: { $size: 0 } } } },
+              { $sort: { "races.bestTime": 1 } },
+              { $skip: (page - 1) * limit },
+              { $limit: limit },
+              { $project: {
+                  _id: 1,
+                  username: 1,
+                  races: { $arrayElemAt: ["$races", raceNumber - 1] }
+              }}
+          ]);
   
-      const race = user.races.find(r => r.raceNumber === raceNumber);
-      if (race) {
-        if (lapTime < race.bestTime) {
-          race.bestTime = lapTime;
-        }
-      } else {
-        user.races.push({ raceNumber, bestTime: lapTime });
-      }
+          const usersWithCurrentUserFlag = users.map(user => {
+              const race = user.races;
+              return {
+                  ...user,
+                  isCurrentUser: user._id.toString() === userId,
+                  races: race ? [{
+                      ...race,
+                      formattedBestTime: formatTime(race.bestTime)
+                  }] : []
+              };
+          });
   
-      await user.save();
-      return user.races;
-    } catch (error) {
-      throw error;
-    }
+          return usersWithCurrentUserFlag;
+      } catch (error) {
+          throw error;
+      }
   }
-
-    async getAllUsers(userId, page, limit) {
-        try {
-            const users = await User.aggregate([
-                { $match: { races: { $exists: true, $not: { $size: 0 } } } },
-                { $unwind: "$races" },
-                { $sort: { "races.bestTime": 1 } },
-                { $group: {
-                    _id: "$_id",
-                    username: { $first: "$username" },
-                    races: { $push: "$races" }
-                }},
-                { $skip: (page - 1) * limit },
-                { $limit: limit }
-            ]);
-    
-            const usersWithCurrentUserFlag = users.map(user => ({
-                ...user,
-                isCurrentUser: user._id.toString() === userId,
-                races: user.races.map(({ _id, ...race }) => ({
-                    ...race,
-                    formattedBestTime: formatTime(race.bestTime)
-                }))
-            }));
-    
-            return usersWithCurrentUserFlag;
-        } catch (error) {
-        throw error;
-        }
-    }
-  
 }
 
 module.exports = UserService;
