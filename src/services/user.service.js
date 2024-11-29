@@ -39,6 +39,29 @@ class UserService {
             throw error;
         }
     }
+
+    async getUserProfile(userId) {
+        try {
+            const user = await User.findById(userId);
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updateUserProfile(userId, avatar, variant) {
+        try {
+            const user = await User.findByIdAndUpdate
+            (userId, { avatar, variant }, { new: true });
+
+            if(!user) {
+                throw new Error('User not found');
+            }
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = UserService;

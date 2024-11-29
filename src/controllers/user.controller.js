@@ -110,6 +110,95 @@ class UserController {
 
     }
 
+    getUserProfile = async (httpRequest) => {
+        const { authorization } = httpRequest.headers;
+
+        let userId;
+
+        if(!authorization){
+            throw new CustomError({
+                message: 'Missing required data'
+            });
+        }
+
+        try {
+            const decoded = jwt.verify(authorization, process.env.KEY_SECRET);
+            userId = decoded.id;
+        } catch (error) {
+            return {
+                status: 401,
+                message: 'Failed to authenticate token'
+            }
+        }
+
+        const [err, result] = await to(this.userService.getUserProfile(userId));
+
+        if (err) {
+            throw new CustomError({
+                message: err.message
+            });
+        }
+
+        if (!result) {
+            throw new CustomError({
+                message: 'User not found'
+            });
+        }
+
+        return {
+            status: 200,
+            data: result
+        };
+    }
+
+    updateUserProfile = async (httpRequest) => {
+        const { authorization } = httpRequest.headers;
+        const { avatar, variant } = httpRequest.body;
+
+        if (!avatar || !variant) {
+            throw new CustomError({
+                message: 'Missing required data'
+            });
+        }
+
+        let userId;
+
+        if(!authorization){
+            throw new CustomError({
+                message: 'Missing required data'
+            });
+        }
+
+        try {
+            const decoded = jwt.verify(authorization, process.env.KEY_SECRET);
+            userId = decoded.id;
+        } catch (error) {
+            return {
+                status: 401,
+                message: 'Failed to authenticate token'
+            }
+        }
+
+        const [err, result] = await to(this.userService.updateUserProfile(userId, avatar, variant));
+
+        if (err) {
+            throw new CustomError({
+                message: err.message
+            });
+        }
+
+        if (!result) {
+            throw new CustomError({
+                message: 'User not found'
+            });
+        }
+
+        return {
+            status: 200,
+            data: result
+        };
+    }
+
 }
 
 

@@ -26,6 +26,17 @@ const userSchema = new Schema({
             require: true
         }
     }],
+    avatar: {
+        type: String,
+        require: false,
+        default: 'Margaret'
+    },
+    variant: {
+        type: String,
+        require: false,
+        default: 'marble'
+    },
+
     created_at: {
         type: Date,
         require: true,
