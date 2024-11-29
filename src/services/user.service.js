@@ -33,19 +33,18 @@ class UserService {
         try {
             const users = await User.aggregate([
                 { $match: { races: { $exists: true, $not: { $size: 0 } } } },
-                { $sort: { "races.bestTime": 1 } },
-                { $skip: (page - 1) * limit },
-                { $limit: limit },
                 { $project: {
                     _id: 1,
                     username: 1,
                     races: { $arrayElemAt: ["$races", raceNumber - 1] }
-                }}
+                }},
+                { $match: { "races.bestTime": { $exists: true } } },
+                { $sort: { "races.bestTime": 1 } },
+                { $skip: (page - 1) * limit },
+                { $limit: limit }
             ]);
     
-            const filteredUsers = users.filter(user => user.races && user.races.bestTime !== undefined);
-    
-            const usersWithCurrentUserFlag = filteredUsers.map(user => {
+            const usersWithCurrentUserFlag = users.map(user => {
                 const race = user.races;
                 return {
                     ...user,
