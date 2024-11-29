@@ -10,18 +10,19 @@ class UserController {
         this.userService = new UserService();
     }
 
-    putFastLapInRace = async (httpRequest) => {
+       putFastLapInRace = async (httpRequest) => {
         const { body } = httpRequest;
         const { authorization } = httpRequest.headers;
-
+    
         let userId;
-
-        if(!authorization){
+    
+        if (!authorization) {
             throw new CustomError({
-                message: 'Missing required data'
+                message: 'Missing required data',
+                status: 400
             });
         }
-
+    
         try {
             const decoded = jwt.verify(authorization, process.env.KEY_SECRET);
             userId = decoded.id;
@@ -29,34 +30,36 @@ class UserController {
             return {
                 status: 401,
                 message: 'Failed to authenticate token'
-            }
+            };
         }
-
+    
         const { raceId, lapTime } = httpRequest.body;
-
+    
         const { error } = validatePutFastLapInRace(body);
-
+    
         if (error) {
             throw new CustomError({
-              message: error.details[0].message
+                message: error.details[0].message,
+                status: 400
             });
-          }
-
-
+        }
+    
         const [err, result] = await to(this.userService.putFastLapInRace(userId, raceId, lapTime));
-
+    
         if (err) {
             throw new CustomError({
-                message: err.message
+                message: err.message,
+                status: 500
             });
         }
-
+    
         if (!result) {
             throw new CustomError({
-                message: 'User not found'
+                message: 'User not found',
+                status: 404
             });
         }
-
+    
         return {
             status: 200,
             data: result

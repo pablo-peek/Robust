@@ -6,6 +6,29 @@ require('dotenv').config();
 class UserService {
   constructor() {}
 
+  async putFastLapInRace(userId, raceNumber, lapTime) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      const race = user.races.find(r => r.raceNumber === raceNumber);
+      if (race) {
+        if (lapTime < race.bestTime) {
+          race.bestTime = lapTime;
+        }
+      } else {
+        user.races.push({ raceNumber, bestTime: lapTime });
+      }
+  
+      await user.save();
+      return user.races;
+    } catch (error) {
+      throw error;
+    }
+  }
+
     async getAllUsers(userId, raceNumber, page, limit) {
         try {
             const users = await User.aggregate([
